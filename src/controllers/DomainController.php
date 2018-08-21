@@ -356,7 +356,7 @@ class DomainController extends \hipanel\base\CrudController
                         'url' => function ($action) {
                             $domain = Yii::$app->request->post('Domain');
 
-                            return ['@domain/transfer-cenceled', 'id' => $domain['id']];
+                            return ['@domain/transfer-canceled', 'id' => $domain['id']];
                         },
                     ],
                 ],
