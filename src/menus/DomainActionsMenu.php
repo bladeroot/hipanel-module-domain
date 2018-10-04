@@ -89,9 +89,20 @@ class DomainActionsMenu extends \hiqdev\yii2\menus\Menu
             [
                 'label' => Yii::t('hipanel:domain', 'Reject transfer'),
                 'icon' => 'fa-anchor',
-                'url' => ['reject-transfer', 'id' => $this->model->id],
+                'url' => ['@domain/reject-transfer', 'id' => $this->model->id ],
                 'visible' => $this->model->canRejectTransfer(),
                 'encode' => false,
+                'linkOptions' => [
+                    'data' => [
+                        'confirm' => Yii::t('hipanel:domain', 'Are you sure you want to reject outgoing transfer of domain {domain}?', ['domain' => $this->model->domain]),
+                        'method' => 'post',
+                        'pjax' => '0',
+                        'form' => 'reject-transfer',
+                        'params' => [
+                            'Domain[id]' => $this->model->id,
+                        ],
+                    ],
+                ],
             ],
             [
                 'label' => Yii::t('hipanel:domain', 'Cancel transfer'),
@@ -131,23 +142,55 @@ class DomainActionsMenu extends \hiqdev\yii2\menus\Menu
                 'visible' => $this->model->canCancelPreincoming(),
             ],
             [
+                'label' => Yii::t('hipanel:domain', 'Approve preincoming transfer'),
+                'icon' => 'fa-exclamation-circle',
+                'url' => ['@domain/force-approve-preincoming', 'id' => $this->model->id, 'domain' => $this->model->domain],
+                'linkOptions' => [
+                    'data' => [
+                        'confirm' => Yii::t('hipanel:domain', 'Are you sure you want to approve domain {domain} transfer?', ['domain' => $this->model->domain]),
+                        'method' => 'post',
+                        'pjax' => '0',
+                        'form' => 'force-approve-preincoming',
+                        'params' => [
+                            'Domain[id]' => $this->model->id,
+                            'Domain[domain]' => $this->model->domain,
+                        ],
+
+                    ],
+                ],
+                'visible' => $this->model->canCancelPreincoming(),
+            ],
+            [
                 'label' => Yii::t('hipanel:domain', 'Synchronize contacts'),
                 'icon' => 'fa-refresh',
                 'url' => ['sync', 'id' => $this->model->id],
                 'visible' => $this->model->canSynchronizeContacts(),
                 'encode' => false,
+                'linkOptions' => [
+                    'data' => [
+                        'method' => 'post',
+                        'pjax' => '0',
+                        'form' => 'sync',
+                        'params' => [
+                            'Domain[id]' => $this->model->id,
+                            'Domain[domain]' => $this->model->domain,
+                        ],
+                    ],
+                ],
             ],
             [
                 'label' => Yii::t('hipanel:domain', 'Delete by AGP'),
                 'icon' => 'fa-trash-o',
                 'url' => ['@domain/delete-agp'],
                 'linkOptions' => [
-                    'confirm' => Yii::t('hipanel:domain', 'Are you sure you want to delete domain {domain}?', ['domain' => $this->model->domain]),
-                    'method' => 'post',
-                    'data-pjax' => '0',
-                    'form' => 'delete-agp',
-                    'params' => [
-                        'Domain[id]' => $this->model->id,
+                    'data' => [
+                        'confirm' => Yii::t('hipanel:domain', 'Are you sure you want to delete domain {domain}?', ['domain' => $this->model->domain]),
+                        'method' => 'post',
+                        'data-pjax' => '0',
+                        'form' => 'delete-agp',
+                        'params' => [
+                            'Domain[id]' => $this->model->id,
+                        ],
                     ],
                 ],
                 'visible' => $this->model->canDeleteAGP(),
