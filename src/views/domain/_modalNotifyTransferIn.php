@@ -89,6 +89,6 @@ $unNotifiedTransferIn = [];
 ])->label(false) ?>
 
 <hr>
-<?= Html::submitButton(Yii::t('hipanel:domain', 'Send FOA'), ['class' => 'btn btn-success']) ?>
+<?= Html::submitButton(Yii::t('hipanel:domain', 'Send FOA'), array_filter(['class' => 'btn btn-success', 'disabled' => count($models) === count($unNotifiedTransferIn)])) ?>
 
 <?php ActiveForm::end() ?>

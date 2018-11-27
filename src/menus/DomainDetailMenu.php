@@ -72,8 +72,9 @@ class DomainDetailMenu extends \hipanel\menus\AbstractDetailMenu
             [
                 'label' => AjaxModal::widget([
                     'id' => 'force-notify-transfer-in-modal',
+                    'bulkPage' => false,
                     'header' => Html::tag('h4', Yii::t('hipanel:domain', 'Send FOA again')),
-                    'scenario' => 'force-notify-transfer-in',
+                    'scenario' => 'force-notify-transfer-in-modal',
                     'actionUrl' => ['@domain/force-notify-transfer-in-modal', 'id' => $this->model->id],
                     'size' => Modal::SIZE_DEFAULT,
                     'toggleButton' => [
