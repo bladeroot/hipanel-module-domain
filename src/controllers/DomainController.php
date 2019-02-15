@@ -77,6 +77,7 @@ class DomainController extends \hipanel\base\CrudController
                     'enable-freeze' => 'domain.freeze',
                     'enable-freeze-w-p' => 'domain.freeze',
                     'unfreeze-access' => 'domain.unfreeze',
+                    'set-nss' => 'domain.set-nss',
                     // TODO
                     'force-reject-preincoming' => 'domain.force-reject-preincoming',
                     'force-approve-preincoming' => 'domain.force-approve-preincoming',
