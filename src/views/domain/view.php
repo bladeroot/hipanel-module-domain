@@ -309,43 +309,49 @@ JS
 </div>
 </div>
 <div class="row">
-    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
-        <div class="nav-tabs-custom">
-            <ul id="domain-details-tab" class="nav nav-tabs">
-                <li class="active"><a href="#ns-records"
-                                      data-toggle="tab"><?= 'Name servers' ?></a></li>
-                <li><a href="#dns-records" data-toggle="tab"><?= Yii::t('hipanel:domain', 'DNS records') ?></a></li>
-            </ul>
-            <div class="tab-content">
-
-                <!-- NS records -->
-                <div class="tab-pane active" id="ns-records">
-                    <?= NsWidget::widget([
-                        'model' => $model,
-                        'attribute' => 'nsips',
-                    ]); ?>
-                </div>
-
-                <!-- DNS records -->
-                <div class="tab-pane" id="dns-records">
-                    <?php if (Yii::$app->hasModule('dns')) {
-                        echo DnsZoneEditWidget::widget([
-                            'domainId' => $model->id,
-                            'clientScriptWrap' => function ($js) {
-                                return new \yii\web\JsExpression("
-                                    $('a[data-toggle=tab]').filter(function () {
-                                        return $(this).attr('href') == '#dns-records';
-                                    }).on('shown.bs.tab', function (e) {
-                                        $js
-                                    });
-                                ");
-                            },
-                        ]);
-                    } ?>
+    <?php if (Yii::$app->user->can('domain.set-nss') || Yii::$app->user->can('hdomain.set-dns')) : ?>
+        <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+            <div class="nav-tabs-custom">
+                <ul id="domain-details-tab" class="nav nav-tabs">
+                    <?php if (Yii::$app->user->can('domain.set-nss')) : ?>
+                        <li class="active"><a href="#ns-records" data-toggle="tab"><?= 'Name servers' ?></a></li>
+                        <?php $nssPaneActive = true ?>
+                    <?php endif ?>
+                    <?php if (Yii::$app->user->can('hdomain.set-dns') && Yii::$app->hasModule('dns')) : ?>
+                        <li class="<?= empty($nssPaneActive) ? 'active' : '' ?>"><a href="#dns-records" data-toggle="tab"><?= Yii::t('hipanel:domain', 'DNS records') ?></a></li>
+                    <?php endif ?>
+                </ul>
+                <div class="tab-content">
+                    <?php if (Yii::$app->user->can('domain.set-nss')) : ?>
+                        <!-- NS records -->
+                        <div class="tab-pane active" id="ns-records">
+                            <?= NsWidget::widget([
+                                'model' => $model,
+                                'attribute' => 'nsips',
+                            ]) ?>
+                        </div>
+                    <?php endif ?>
+                    <?php if (Yii::$app->user->can('hdomain.set-dns') && Yii::$app->hasModule('dns')) : ?>
+                        <!-- DNS records -->
+                        <div class="tab-pane <?= empty($nssPaneActive) ? 'active' : '' ?>" id="dns-records">
+                            <?= DnsZoneEditWidget::widget([
+                                'domainId' => $model->id,
+                                'clientScriptWrap' => function ($js) {
+                                    return new \yii\web\JsExpression("
+                                        $('a[data-toggle=tab]').filter(function () {
+                                            return $(this).attr('href') == '#dns-records';
+                                        }).on('shown.bs.tab', function (e) {
+                                            $js
+                                        });
+                                    ");
+                                },
+                            ]) ?>
+                        <?php endif ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif ?>
     <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
         <div class="nav-tabs-custom">
             <ul id="domain-details-tab" class="nav nav-tabs">

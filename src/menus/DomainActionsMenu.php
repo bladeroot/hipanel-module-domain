@@ -17,7 +17,6 @@ use hipanel\widgets\AjaxModal;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 
-
 class DomainActionsMenu extends \hiqdev\yii2\menus\Menu
 {
     public $model;
@@ -93,9 +92,20 @@ class DomainActionsMenu extends \hiqdev\yii2\menus\Menu
             [
                 'label' => Yii::t('hipanel:domain', 'Reject transfer'),
                 'icon' => 'fa-anchor',
-                'url' => ['reject-transfer', 'id' => $this->model->id],
+                'url' => ['@domain/reject-transfer', 'id' => $this->model->id],
                 'visible' => $this->model->canRejectTransfer(),
                 'encode' => false,
+                'linkOptions' => [
+                    'data' => [
+                        'confirm' => Yii::t('hipanel:domain', 'Are you sure you want to reject outgoing transfer of domain {domain}?', ['domain' => $this->model->domain]),
+                        'method' => 'post',
+                        'pjax' => '0',
+                        'form' => 'reject-transfer',
+                        'params' => [
+                            'Domain[id]' => $this->model->id,
+                        ],
+                    ],
+                ],
             ],
             [
                 'label' => Yii::t('hipanel:domain', 'Cancel transfer'),
@@ -159,6 +169,17 @@ class DomainActionsMenu extends \hiqdev\yii2\menus\Menu
                 'url' => ['sync', 'id' => $this->model->id],
                 'visible' => $this->model->canSynchronizeContacts(),
                 'encode' => false,
+                'linkOptions' => [
+                    'data' => [
+                        'method' => 'post',
+                        'pjax' => '0',
+                        'form' => 'sync',
+                        'params' => [
+                            'Domain[id]' => $this->model->id,
+                            'Domain[domain]' => $this->model->domain,
+                        ],
+                    ],
+                ],
             ],
             [
                 'label' => Yii::t('hipanel:domain', 'Delete by AGP'),
@@ -233,6 +254,13 @@ class DomainActionsMenu extends \hiqdev\yii2\menus\Menu
                     ],
                 ],
                 'visible' => $this->model->canHoldUnhold(),
+            ],
+            [
+                'label' => Yii::t('hipanel:domain', 'Manage DNS'),
+                'icon' => 'fa-globe',
+                'url' => ['@dns/zone/view', 'id' => $this->model->id],
+                'visible' => (Yii::getAlias('@dns', false)),
+                'encode' => false,
             ],
         ];
     }

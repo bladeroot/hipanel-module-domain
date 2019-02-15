@@ -41,6 +41,7 @@ class TransferController extends \hipanel\base\CrudController
                 'class' => EasyAccessControl::class,
                 'actions' => [
                     'add-to-cart-transfer' => 'domain.pay',
+                    'index' => 'domain.pay',
                     '*' => 'domain.read',
                 ],
             ],

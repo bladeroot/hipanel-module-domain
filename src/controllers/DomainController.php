@@ -71,11 +71,18 @@ class DomainController extends \hipanel\base\CrudController
                 'actions' => [
                     'add-to-cart-renewal' => 'domain.pay',
                     'bulk-renewal' => 'domain.pay',
+                    'add-to-cart-registration' => 'domain.pay',
+                    'transfer' => 'domain.pay',
+                    'add-to-cart-transfer' => 'domain.pay',
                     'enable-freeze' => 'domain.freeze',
                     'enable-freeze-w-p' => 'domain.freeze',
                     'unfreeze-access' => 'domain.unfreeze',
-                    'force-reject-preincoming' => 'support',
-                    'force-approve-preincoming' => 'support',
+                    // TODO
+                    'force-reject-preincoming' => 'domain.force-reject-preincoming',
+                    'force-approve-preincoming' => 'domain.force-approve-preincoming',
+                    'approve-transfer' => 'domain.approve-trasfer-out',
+                    'delete' => 'domain.delete',
+                    'delete-agp' => 'domain.delete-agp',
                     'force-notify-transfer-in' => 'domain.force-send-foa',
                     'force-notify-transfer-in-modal' => 'domain.force-send-foa',
                     'transfer-in' => true,
@@ -172,7 +179,6 @@ class DomainController extends \hipanel\base\CrudController
                     $action->collection->load($data);
                 },
             ],
-
             'push' => [
                 'class' => SmartPerformAction::class,
                 'collectionLoader' => function ($action) {
