@@ -5,7 +5,7 @@
  * @link      https://github.com/hiqdev/hipanel-module-domain
  * @package   hipanel-module-domain
  * @license   BSD-3-Clause
- * @copyright Copyright (c) 2015-2017, HiQDev (http://hiqdev.com/)
+ * @copyright Copyright (c) 2015-2019, HiQDev (http://hiqdev.com/)
  */
 
 namespace hipanel\modules\domain\models;
@@ -109,7 +109,7 @@ class Domain extends \hipanel\base\Model
     public function rules()
     {
         return [
-            [['id', 'zone_id', 'seller_id', 'client_id', 'remoteid', 'daysleft', 'prem_daysleft', 'add_period'], 'integer'],
+            [['id', 'zone_id', 'seller_id', 'client_id', 'remoteid', 'daysleft', 'prem_daysleft', 'add_grace_period'], 'integer'],
             [['domain', 'statuses', 'name', 'zone', 'state', 'lastop', 'state_label'], 'safe'],
             [['seller', 'seller_name', 'client', 'client_name'], 'safe'],
             [['premium_expires', 'premium_days_left'], 'safe'],
@@ -238,7 +238,6 @@ class Domain extends \hipanel\base\Model
             'park' => Yii::t('hipanel:domain', ''),
             'dnspremium' => Yii::t('hipanel:domain', ''),
 
-
             'epp_client_id' => Yii::t('hipanel:domain', 'EPP client ID'),
             'remoteid' => Yii::t('hipanel', 'Remote ID'),
             'domain' => Yii::t('hipanel', 'Domain name'),
@@ -340,17 +339,17 @@ class Domain extends \hipanel\base\Model
 
     public function isFreezed()
     {
-        return (bool)$this->is_freezed;
+        return (bool) $this->is_freezed;
     }
 
     public function isWPFreezed()
     {
-        return (bool)$this->wp_freezed;
+        return (bool) $this->wp_freezed;
     }
 
     public function isHolded()
     {
-        return (bool)$this->is_holded;
+        return (bool) $this->is_holded;
     }
 
     public function isOk()
@@ -600,6 +599,7 @@ class Domain extends \hipanel\base\Model
                     break;
                 }
             }
+
             return $result;
         };
 
@@ -674,6 +674,11 @@ class Domain extends \hipanel\base\Model
         return $this->isExpired() || $this->isDeleting() || $this->isRussianZones();
     }
 
+    public function isSetNSable()
+    {
+        return $this->isOk();
+    }
+
     public function canBePushed()
     {
         return ($this->isPushable() && $this->can('domain.push'))
@@ -687,9 +692,9 @@ class Domain extends \hipanel\base\Model
 
     public function canDeleteAGP()
     {
-        return $this->add_period !== null
+        return $this->add_grace_period !== null
             && $this->isOk()
-            && strtotime($this->created_date) > strtotime("-{$this->add_period} hours", time())
+            && strtotime($this->created_date) > strtotime("-{$this->add_grace_period}", time())
             && strtotime($this->expires) < strtotime('+1 year', time())
             && $this->can('manage');
     }
