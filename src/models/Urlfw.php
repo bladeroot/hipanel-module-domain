@@ -1,9 +1,16 @@
 <?php
+/**
+ * Domain plugin for HiPanel
+ *
+ * @link      https://github.com/hiqdev/hipanel-module-domain
+ * @package   hipanel-module-domain
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2015-2019, HiQDev (http://hiqdev.com/)
+ */
 
 namespace hipanel\modules\domain\models;
 
 use hipanel\modules\dns\validators\DomainPartValidator;
-use hipanel\validators\DomainValidator;
 use Yii;
 
 class Urlfw extends \hipanel\base\Model
@@ -17,7 +24,7 @@ class Urlfw extends \hipanel\base\Model
         return [
             [['id', 'domain_id', 'dns_id', 'type_id'], 'integer'],
             [['name', 'value', 'type', 'type_label', 'currentTab', 'status'], 'string'],
-            [['name', 'type', 'value'], 'required'],
+            [['type', 'value'], 'required'],
             [['name'], DomainPartValidator::class],
             [['value'], 'url'],
         ];
@@ -32,5 +39,4 @@ class Urlfw extends \hipanel\base\Model
             'value' => Yii::t('hipanel.domain.premium', 'Forwarding address'),
         ];
     }
-
 }
