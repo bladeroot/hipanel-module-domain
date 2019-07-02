@@ -6,7 +6,6 @@
  * @var boolean $hasPincode
  * @var array $forwardingOptions
  */
-
 use hipanel\modules\dns\widgets\DnsZoneEditWidget;
 use hipanel\modules\domain\grid\DomainGridView;
 use hipanel\modules\domain\menus\DomainDetailMenu;
@@ -114,6 +113,14 @@ JS
 <div class="row">
 
     <div class="col-lg-3 col-md-6">
+
+        <?php if ($model->canRenew()) : ?>
+            <?= Html::a(Html::tag('i', null, ['class' => 'fa fa-fw fa-forward']) . Yii::t('hipanel:domain', 'Renew domain'),
+                ['add-to-cart-renewal', 'model_id' => $model->id],
+                ['class' => 'btn btn-success btn-block margin-bottom']
+            ) ?>
+        <?php endif; ?>
+
         <div class="box box-widget widget-user">
             <div class="widget-user-header" data-background-image-url="//mini.s-shot.ru/1024x768/PNG/500/Z100/?<?= $model->domain ?>"
                  style="background-position: top center; background-color: white; background-repeat:  no-repeat; background-size:  cover;">

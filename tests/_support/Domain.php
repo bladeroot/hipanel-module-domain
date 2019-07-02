@@ -1,4 +1,12 @@
 <?php
+/**
+ * Domain plugin for HiPanel
+ *
+ * @link      https://github.com/hiqdev/hipanel-module-domain
+ * @package   hipanel-module-domain
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2015-2019, HiQDev (http://hiqdev.com/)
+ */
 
 namespace hipanel\modules\domain\tests\_support;
 
@@ -24,5 +32,10 @@ class Domain
     public function setDomainId(string $domainId): void
     {
         $this->domainId = $domainId;
+    }
+
+    public function getDomainId(): int
+    {
+        return $this->domainId;
     }
 }

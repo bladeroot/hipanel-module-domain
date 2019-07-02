@@ -5,7 +5,7 @@
  * @link      https://github.com/hiqdev/hipanel-module-domain
  * @package   hipanel-module-domain
  * @license   BSD-3-Clause
- * @copyright Copyright (c) 2015-2017, HiQDev (http://hiqdev.com/)
+ * @copyright Copyright (c) 2015-2019, HiQDev (http://hiqdev.com/)
  */
 
 namespace hipanel\modules\domain\grid;
@@ -59,7 +59,7 @@ class DomainGridView extends BoxedGridView
                 'label' => Html::tag('span', Yii::t('hipanel.domain.premium', 'Premium autorenewal')),
                 'pluginOptions' => function ($model) {
                     return [
-                        'readonly' => !(bool)$model->premium->is_active,
+                        'readonly' => !(bool) $model->premium->is_active,
                     ];
                 },
                 'switchOptions' => [
@@ -77,7 +77,6 @@ class DomainGridView extends BoxedGridView
                         ],
                     ],
                 ],
-
             ],
             'transfer_attention' => [
                 'label' => Yii::t('hipanel:domain', 'Attention'),
@@ -256,7 +255,16 @@ class DomainGridView extends BoxedGridView
                 'filter' => false,
                 'headerOptions' => ['style' => 'width:1em'],
                 'value' => function ($model) {
-                    return Expires::widget(compact('model'));
+                    $html = Expires::widget(['model' => $model, 'labelOptions' => ['style' => 'line-height: inherit!important;']]);
+                    if ($model->isExpiresSoon() && $model->canRenew()) {
+                        $html = Html::tag('span',
+                            $html . '&nbsp;' . Html::a(Html::tag('i', null, ['class' => 'fa fa-fw fa-forward']) .
+                            Yii::t('hipanel:domain', 'Renew'), ['add-to-cart-renewal', 'model_id' => $model->id], ['class' => 'btn btn-success btn-xs']),
+                            ['style' => 'display: flex; justify-content: flex-start;']
+                        );
+                    }
+
+                    return $html;
                 },
             ],
             'autorenewal' => [ // don't forget to update `autorenewal_with_label` column as well
