@@ -50,6 +50,21 @@ class DomainRegistrationProduct extends AbstractDomainProduct implements BatchPu
         return $result;
     }
 
+    /** {@inheritdoc} */
+    public function getQuantityOptions()
+    {
+        $result = [];
+        $this->quantityLimits = $this->quantityLimits ?? $this->getQuantityLimits();
+        $limit = isset($this->quantityLimits[$this->getZone()])
+            ? $this->quantityLimits[$this->getZone()] 
+            : $this->quantityLimits['*'];
+        for ($n = 1; $n <= $limit; ++$n) {
+            $result[$n] = Yii::t('hipanel:domain', '{0, plural, one{# year} other{# years}}', $n);
+        }
+
+        return $result;
+    }
+
     public function getBatchPurchaseStrategyClass()
     {
         return BatchPurchaseStrategy::class;

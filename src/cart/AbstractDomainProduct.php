@@ -11,6 +11,7 @@
 namespace hipanel\modules\domain\cart;
 
 use hipanel\modules\domain\models\Domain;
+use hipanel\modules\domain\models\Zone;
 use hipanel\modules\finance\cart\AbstractCartPosition;
 use hipanel\validators\DomainValidator;
 use hiqdev\yii2\cart\DontIncrementQuantityWhenAlreadyInCart;
@@ -34,13 +35,7 @@ abstract class AbstractDomainProduct extends AbstractCartPosition implements Don
     /**
      * @var integer[] The limit of quantity (years of purchase/renew) for each domain zone in years
      */
-    protected $quantityLimits = [
-        'ru' => 1,
-        'su' => 1,
-        'рф' => 1,
-        'xn--p1ai' => 1,
-        '*' => 10,
-    ];
+    protected $quantityLimits;
 
     /** {@inheritdoc} */
     public function getIcon()
@@ -74,25 +69,7 @@ abstract class AbstractDomainProduct extends AbstractCartPosition implements Don
     /** {@inheritdoc} */
     public function getQuantityOptions()
     {
-        $result = [];
-        $limit = isset($this->quantityLimits[$this->getZone()]) ? $this->quantityLimits[$this->getZone()] : $this->quantityLimits['*'];
-
-        if ($this->_model) {
-            $interval = (new \DateTime())->diff(new \DateTime($this->_model->expires));
-            if ($interval->y >= 0 && !$interval->invert) {
-                $limit -= $interval->y;
-                if ($interval->m > 0 || $interval->d > 0) {
-                    --$limit;
-                }
-            }
-        }
-
-        $limit = $limit < 1 ? 1 : $limit;
-        for ($n = 1; $n <= $limit; ++$n) {
-            $result[$n] = Yii::t('hipanel:domain', '{0, plural, one{# year} other{# years}}', $n);
-        }
-
-        return $result;
+        return [];
     }
 
     /** {@inheritdoc} */
@@ -112,5 +89,37 @@ abstract class AbstractDomainProduct extends AbstractCartPosition implements Don
         $parent['_model'] = $this->_model;
 
         return $parent;
+    }
+
+    protected function getQuantityLimits() : array
+    {
+        return Yii::$app->cache->getOrSet(['get-zones-quantity-limits', $user->id], function() {
+            $zones = $this->getZoneData();
+            $data = ['*' => 10];
+            foreach ($zones as $name => $zone) {
+                if ($zone->max_delegation) {
+                    $data[substr($name, 1)] = (int) $zone->max_delegation;
+                }
+            }
+
+            return $data;
+        });
+    }
+
+    protected function getZoneData()
+    {
+        return Yii::$app->cache->getOrSet(['get-zones-data-with-values', $user->id], function() {
+            $data = Zone::find()->where(['state' => Zone::STATE_OK])->all();
+            foreach ($data as $zone) {
+                $zones[$zone->zone] = $zone;
+                $zones[$zone->name] = $zone;
+            }
+
+            return $zones;
+        });
+    }
+
+    protected function setQuantityList($limit)
+    {
     }
 }

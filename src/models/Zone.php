@@ -21,11 +21,15 @@ class Zone extends Model
     {
         return [
             [['id'], 'integer', 'on' => ['create', 'update']],
-            [['name', 'registry', 'no', 'state', 'add_grace_period', 'autorenew_grace_period', 'redemption_grace_period'], 'string', 'on' => ['create', 'update']],
+            [['name', 'registry', 'no', 'state', 'add_grace_period', 'autorenew_grace_period', 'redemption_grace_period', 'zone'], 'string', 'on' => ['create', 'update']],
+            [['max_delegation', 'max_periods'], 'integer', 'on' => ['create', 'update']],
             [['has_contacts', 'password_required'], 'boolean', 'on' => ['create', 'update']],
             [['name', 'registry', 'no', 'state'], 'required', 'on' => ['create', 'update']],
             [['id'], 'required', 'on' => ['update', 'delete']],
             [['add_grace_limit'], 'integer', 'min' => 0, 'max' => 100],
+            [['max_delegation'], 'integer', 'min' => 1, 'max' => 10],
+            [['max_periods'], 'integer', 'max' => 10],
+            [['days_before_expire'], 'integer', 'max' => 60],
             [['id', 'state', 'registry'], 'safe', 'on' => ['enable', 'disable']]
         ];
     }

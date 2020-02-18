@@ -96,6 +96,16 @@ use yii\helpers\Url;
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <?= $form->field($model, "[$i]max_periods") ?>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <?= $form->field($model, "[$i]max_delegation") ?>
+                        </div>
+                    </div>
+
                     <div class="col-md-4">
                         <?= $form->field($model, "[$i]has_contacts")->checkbox(); ?>
                         <?= $form->field($model, "[$i]password_required")->checkbox(); ?>

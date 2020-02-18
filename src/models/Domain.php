@@ -109,7 +109,7 @@ class Domain extends \hipanel\base\Model
     public function rules()
     {
         return [
-            [['id', 'zone_id', 'seller_id', 'client_id', 'remoteid', 'daysleft', 'prem_daysleft', 'add_grace_period'], 'integer'],
+            [['id', 'zone_id', 'seller_id', 'client_id', 'remoteid', 'daysleft', 'prem_daysleft', 'add_grace_period', 'max_delegation', 'days_before_expire'], 'integer'],
             [['domain', 'statuses', 'name', 'zone', 'state', 'lastop', 'state_label'], 'safe'],
             [['seller', 'seller_name', 'client', 'client_name'], 'safe'],
             [['premium_expires', 'premium_days_left'], 'safe'],
