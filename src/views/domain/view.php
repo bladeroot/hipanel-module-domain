@@ -11,6 +11,7 @@ use hipanel\modules\domain\grid\DomainGridView;
 use hipanel\modules\domain\menus\DomainDetailMenu;
 use hipanel\modules\domain\widgets\AuthCode;
 use hipanel\modules\domain\widgets\NsWidget;
+use hipanel\modules\domain\widgets\SecDNSEditWidget;
 use hipanel\widgets\ClientSellerLink;
 use hipanel\widgets\Pjax;
 use yii\helpers\Html;
@@ -322,9 +323,9 @@ JS
                 <li class="active"><a href="#ns-records"
                                       data-toggle="tab"><?= 'Name servers' ?></a></li>
                 <li><a href="#dns-records" data-toggle="tab"><?= Yii::t('hipanel:domain', 'DNS records') ?></a></li>
+                <li><a href="#secdns-records" data-toggle="tab"><?= Yii::t('hipanel:domain', 'SecDNS records') ?></a></li>
             </ul>
             <div class="tab-content">
-
                 <!-- NS records -->
                 <div class="tab-pane active" id="ns-records">
                     <?= NsWidget::widget([
@@ -334,9 +335,9 @@ JS
                 </div>
 
                 <!-- DNS records -->
-                <div class="tab-pane" id="dns-records">
-                    <?php if (Yii::$app->hasModule('dns')) {
-                        echo DnsZoneEditWidget::widget([
+                <?php if (Yii::$app->hasModule('dns')): ?>
+                    <div class="tab-pane" id="dns-records">
+                        <?= DnsZoneEditWidget::widget([
                             'domainId' => $model->id,
                             'clientScriptWrap' => function ($js) {
                                 return new \yii\web\JsExpression("
@@ -347,9 +348,25 @@ JS
                                     });
                                 ");
                             },
-                        ]);
-                    } ?>
-                </div>
+                        ]) ?>
+                    </div>
+                <?php endif ?>
+                <?php if (true) : ?>
+                    <div class="tab-pane" id="secdns-records">
+                        <?= SecDNSEditWidget::widget([
+                            'domainId' => $model->id,
+                            'clientScriptWrap' => function ($js) {
+                                return new \yii\web\JsExpression("
+                                    $('a[data-toggle=tab]').filter(function () {
+                                        return $(this).attr('href') == '#secdns-records';
+                                    }).on('shown.bs.tab', function (e) {
+                                        $js
+                                    });
+                                ");
+                            },
+                        ]) ?>
+                    </div>
+                <?php endif ?>
             </div>
         </div>
     </div>

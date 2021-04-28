@@ -78,4 +78,21 @@ class SecdnsController extends \hipanel\base\CrudController
         ]);
     }
 
+    public function actionView($id)
+    {
+        if (($models = $this->newModel()->find()->where(['domain_id' => $id])->all()) === null) {
+            throw new NotFoundHttpException('SecDNS does not exist');
+        }
+
+        $recordsDataProvider = new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => false,
+            'modelClass' => Record::class,
+        ]);
+
+        return $this->render('view', [
+            'model' => $model,
+            'recordsDataProvider' => $recordsDataProvider,
+        ]);
+    }
 }
