@@ -730,12 +730,12 @@ class Domain extends Model
 
     public function canDeleteAGP()
     {
-        if ($this->add_grace_period === null) {
+        if ($this->getAddGracePeriod() === "0 hours") {
             return false;
         }
 
         return $this->isOk()
-            && strtotime($this->created_date) > strtotime("-{$this->add_grace_period}", time())
+            && strtotime($this->created_date) > strtotime("-{$this->getAddGracePeriod()}", time())
             && strtotime($this->expires) < strtotime('+1 year', time())
             && $this->can('manage');
     }
@@ -913,6 +913,11 @@ class Domain extends Model
     public function isWhoisProtectEnabled(): bool
     {
         return isset($this->whois_protected) && (bool)$this->whois_protected !== false;
+    }
+
+    public function getAddGracePeriod(): ?string
+    {
+        return !empty($this->add_grace_period) ? $this->add_grace_period : "0 hours";
     }
 
     /**
