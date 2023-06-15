@@ -69,6 +69,8 @@ $unPushable = array_filter(array_map(
 
 <?= $form->field($model, 'receiver')->textInput(['autocomplete' => 'off']) ?>
 
+<?= $form->field($model, 'with_contacts')->checkbox() ?>
+
 <?php if ($hasPincode) : ?>
     <?= $form->field($model, 'pincode')->input('password', ['autocomplete' => 'off']) ?>
 <?php endif; ?>

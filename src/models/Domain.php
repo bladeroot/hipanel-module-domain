@@ -226,6 +226,7 @@ class Domain extends Model
                 }
             }, 'on' => ['push-with-pincode']],
             [['domain', 'sender', 'pincode'], 'safe', 'on' => ['push', 'push-with-pincode']],
+            [['with_contacts'], 'boolean', 'on' => ['push', 'push-with-pincode']],
 
             // Bulk set contacts
             [['id', 'domain'], 'safe', 'on' => ['bulk-set-contacts']],
@@ -731,7 +732,7 @@ class Domain extends Model
 
     public function canDeleteAGP()
     {
-        if ($this->add_grace_period === null) {
+        if (empty($this->add_grace_period)) {
             return false;
         }
 
